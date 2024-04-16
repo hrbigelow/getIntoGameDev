@@ -100,6 +100,7 @@ def make_instance(applicationName):
         in order to interface with vulkan.
     """
     extensions = glfw.get_required_instance_extensions()
+    extensions.append(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME)
     if vklogging.logger.debug_mode:
         extensions.append(VK_EXT_DEBUG_REPORT_EXTENSION_NAME)
 
@@ -126,6 +127,7 @@ def make_instance(applicationName):
     """
     createInfo = VkInstanceCreateInfo(
         pApplicationInfo = appInfo,
+        flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
         enabledLayerCount = len(layers), ppEnabledLayerNames = layers,
         enabledExtensionCount = len(extensions), ppEnabledExtensionNames = extensions
     )

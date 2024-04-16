@@ -109,6 +109,8 @@ def make_instance(debug, applicationName):
         in order to interface with vulkan.
     """
     extensions = glfw.get_required_instance_extensions()
+    extensions.append(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME)
+    # extensions.append(VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME)
     if debug:
         extensions.append(VK_EXT_DEBUG_REPORT_EXTENSION_NAME)
 
@@ -136,8 +138,11 @@ def make_instance(debug, applicationName):
             enabledExtensionCount=None,ppEnabledExtensionNames=None,
         )
     """
+    flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
+
     createInfo = VkInstanceCreateInfo(
         pApplicationInfo = appInfo,
+        flags = flags,
         enabledLayerCount = len(layers), ppEnabledLayerNames = layers,
         enabledExtensionCount = len(extensions), ppEnabledExtensionNames = extensions
     )
@@ -153,7 +158,7 @@ def make_instance(debug, applicationName):
     """
     try:
         return vkCreateInstance(createInfo, None)
-    except:
+    except Exception as exc:
         if (debug):
-            print("Failed to create Instance!")
+            print(f"Failed to create Instance ...  {str(exc)}")
         return None
