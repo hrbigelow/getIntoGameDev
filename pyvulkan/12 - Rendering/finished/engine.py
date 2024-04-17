@@ -181,8 +181,7 @@ class Engine:
                 semaphore = self.imageAvailable, fence = VK_NULL_HANDLE
             )
         except Exception as ex:
-            if self.debugMode:
-                print(f'Failed vkAcquireNextImageKHR: {ex}')
+            raise RuntimeError(f'Failed vkAcquireNextImageKHR: {ex}')
 
         commandBuffer = self.swapchainFrames[imageIndex].commandbuffer
         vkResetCommandBuffer(commandBuffer = commandBuffer, flags = 0)
