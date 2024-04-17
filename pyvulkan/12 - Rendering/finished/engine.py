@@ -175,10 +175,14 @@ class Engine:
             device = self.device, fenceCount = 1, pFences = [self.inFlightFence,]
         )
 
-        imageIndex = vkAcquireNextImageKHR(
-            device = self.device, swapchain = self.swapchain, timeout = 1000000000, 
-            semaphore = self.imageAvailable, fence = VK_NULL_HANDLE
-        )
+        try:
+            imageIndex = vkAcquireNextImageKHR(
+                device = self.device, swapchain = self.swapchain, timeout = 1000000000, 
+                semaphore = self.imageAvailable, fence = VK_NULL_HANDLE
+            )
+        except Exception as ex:
+            if self.debugMode:
+                print(f'Failed vkAcquireNextImageKHR: {ex}')
 
         commandBuffer = self.swapchainFrames[imageIndex].commandbuffer
         vkResetCommandBuffer(commandBuffer = commandBuffer, flags = 0)
